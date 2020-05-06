@@ -9,6 +9,8 @@
 import UIKit
 
 class ContentViewController: UIViewController {
+    
+    private let rootVC = ViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,6 +18,13 @@ class ContentViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         self.view.backgroundColor = .blue
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(menuAction(_:)))
+    }
+    
+    @objc func menuAction(_ button: UIBarButtonItem) {
+        print("tap")
+        rootVC.showSidemenu(animated: true)
     }
     
 

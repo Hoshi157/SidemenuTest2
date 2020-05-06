@@ -24,7 +24,11 @@ class SideMenuViewController: UIViewController {
             // ratioを0~1前としてnewValueはcontentRatio
             let ratio = min(max(newValue, 0), 1)
             contentView.frame.origin.x = contentMaxWidth * ratio - contentView.frame.width
+            contentView.layer.shadowColor = UIColor.black.cgColor
+            contentView.layer.shadowRadius = 3.0
+            contentView.layer.shadowOpacity = 0.8
             
+            view.backgroundColor = UIColor(white: 0, alpha: 0.3 * ratio)
         }
     }
 
@@ -34,13 +38,22 @@ class SideMenuViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         self.view.backgroundColor = .yellow
+        
+        var contentRect = view.bounds
+        contentRect.size.width = contentMaxWidth
+        contentView.frame = contentRect
+        contentView.backgroundColor = .white
+        contentView.autoresizingMask = .flexibleHeight
+        view.addSubview(contentView)
     }
     
     func showContentView(animated: Bool) {
         if animated {
-            
+            UIView.animate(withDuration: 0.3) {
+                self.contentRatio = 1.0
+            }
         }else {
-            
+            contentRatio = 1.0
         }
     }
     

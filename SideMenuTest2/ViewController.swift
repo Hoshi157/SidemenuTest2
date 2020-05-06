@@ -11,6 +11,12 @@ import UIKit
 class ViewController: UIViewController {
     
     private let sideMenuVC = SideMenuViewController()
+    private var contentVC: UIViewController? {
+        return self.storyboard?.instantiateViewController(identifier: "navi")
+    }
+    private var isShowSidemenu: Bool {
+        return sideMenuVC.parent == self
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,22 +24,25 @@ class ViewController: UIViewController {
         
         self.view.backgroundColor = .red
         
-        showSidemenu(animated: true)
+        addChild(contentVC!)
+        view.addSubview(contentVC!.view)
+        didMove(toParent: self)
     }
     
-    private func showSidemenu(contentAvailabilty: Bool = true, animated: Bool) {
+    func showSidemenu(contentAvailabilty: Bool = true, animated: Bool) {
+        if isShowSidemenu {return}
         
-        // contentVCはnavigation
-        let contentVC = self.storyboard!.instantiateViewController(withIdentifier: "navi")
         // rootVCの子VCにsideMenuVCを追加。
         self.addChild(sideMenuVC)
         sideMenuVC.view.autoresizingMask = .flexibleHeight
-        sideMenuVC.view.frame = contentVC.view.bounds
+        sideMenuVC.view.frame = contentVC!.view.bounds
+        // viewはroot→content→sideMenuの順に
+        self.view.insertSubview(sideMenuVC.view, aboveSubview: contentVC!.view)
         sideMenuVC.didMove(toParent: self)
         
-        // viewはroot→content→sideMenuの順に
-        self.view.insertSubview(sideMenuVC.view, aboveSubview: contentVC.view)
-        
+        if contentAvailabilty {
+            sideMenuVC.showContentView(animated: animated)
+        }
     }
 
 
