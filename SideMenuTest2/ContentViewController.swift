@@ -24,7 +24,6 @@ class ContentViewController: UIViewController {
     
     @objc func menuAction(_ button: UIBarButtonItem) {
         print("tap")
-        rootVC.showSidemenu(animated: true)
     }
     
 
