@@ -17,6 +17,14 @@ class SideMenuViewController: UIViewController {
         return view.bounds.width * 0.8
     }
     
+    private var hideButton: UIButton {
+        let button = UIButton()
+        button.setTitle("hide", for: .normal)
+        button.frame.size = CGSize(width: 50, height: 50)
+        button.titleLabel?.tintColor = .black
+        return button
+    }
+    
     private var contentRatio: CGFloat {
         get{
             // maxXはcontentViewの右端の座標。そこからwidthの引いているためreturnは必ず0?
@@ -50,15 +58,37 @@ class SideMenuViewController: UIViewController {
         contentView.backgroundColor = .white
         contentView.autoresizingMask = .flexibleHeight
         view.addSubview(contentView)
+        
+        contentView.addSubview(hideButton)
+        hideButton.frame.origin.x = contentView.frame.minX
+        hideButton.frame.origin.y = contentView.frame.minY
     }
     
+    //　サイドメニューを表示する処理
     func showContentView(animated: Bool) {
         if animated {
+            // trueはアニメーション
             UIView.animate(withDuration: 0.3) {
                 self.contentRatio = 1.0
             }
         }else {
+            // falseは表示されているためそのまま
             contentRatio = 1.0
+        }
+    }
+    
+    // サイドメニューを隠す処理(クロージャはアニメーション終了後に親子関係を解除するため)
+    func hideContentView(animated: Bool, completion: ((Bool) -> Void)?) {
+        if animated {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.contentRatio = 0
+                // completionクロージャにて終了後に呼ばれる
+            }, completion: { (finished) in
+                completion?(finished)
+            })
+        }else {
+            contentRatio = 0
+            completion?(true)
         }
     }
     

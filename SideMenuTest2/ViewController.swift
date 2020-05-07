@@ -53,6 +53,17 @@ class ViewController: UIViewController {
         }
     }
     
+    // ①サイドメニュー判定 ②アニメーションが終了したらsideMenuVCの親子関係を解除
+    private func hideSideMenu(animated: Bool) {
+        if !isShowSidemenu {return}
+        
+        sideMenuVC.hideContentView(animated: animated, completion: { (_) in
+            self.sideMenuVC.willMove(toParent: nil)
+            self.sideMenuVC.removeFromParent()
+            self.sideMenuVC.view.removeFromSuperview()
+        })
+    }
+    
     //contentViewのボタンタップ処理
     @objc func menuAction(_ button: UIBarButtonItem) {
         print("tap")
