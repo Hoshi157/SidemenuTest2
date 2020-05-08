@@ -67,6 +67,10 @@ class SideMenuViewController: UIViewController {
         
         // 閉じるボタン設置
         contentView.addSubview(hideButton)
+        
+        // バックViewタップすると閉じる処理
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(backViewTapped(_:)))
+        view.addGestureRecognizer(tapGestureRecognizer)
     }
     
     //　サイドメニューを表示する処理
@@ -106,6 +110,11 @@ class SideMenuViewController: UIViewController {
         viewVC.hideSideMenu(animated: true)
     }
     
+    @objc func backViewTapped(_ sender: UITapGestureRecognizer) {
+        print("backView")
+        guard let viewVC = rootViewController else {return}
+        viewVC.hideSideMenu(animated: true)
+    }
     
     
 
