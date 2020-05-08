@@ -16,12 +16,18 @@ class SideMenuViewController: UIViewController {
         // boundsはローカルのview座標(なので固定)
         return view.bounds.width * 0.8
     }
+    private var rootViewController: ViewController? {
+        return self.parent as? ViewController
+    }
     
+    // サイドメニューを閉じるボタン設置
     private var hideButton: UIButton {
-        let button = UIButton()
+        let button = UIButton(frame: CGRect(x: self.contentView.frame.maxX - 50, y: 50, width: 50, height: 50))
         button.setTitle("hide", for: .normal)
         button.frame.size = CGSize(width: 50, height: 50)
-        button.titleLabel?.tintColor = .black
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .darkGray
+        button.addTarget(self, action: #selector(hideButtonAction(_:)), for: .touchUpInside)
         return button
     }
     
@@ -59,9 +65,8 @@ class SideMenuViewController: UIViewController {
         contentView.autoresizingMask = .flexibleHeight
         view.addSubview(contentView)
         
+        // 閉じるボタン設置
         contentView.addSubview(hideButton)
-        hideButton.frame.origin.x = contentView.frame.minX
-        hideButton.frame.origin.y = contentView.frame.minY
     }
     
     //　サイドメニューを表示する処理
@@ -92,6 +97,14 @@ class SideMenuViewController: UIViewController {
         }
     }
     
+    // サイドメニューを隠すボタンの処理
+    @objc func hideButtonAction(_ button: UIButton) {
+        print("hide")
+        
+        // ここのエラー文はなんとかならないか？
+        guard let viewVC = rootViewController else {return}
+        viewVC.hideSideMenu(animated: true)
+    }
     
     
     

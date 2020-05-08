@@ -54,7 +54,7 @@ class ViewController: UIViewController {
     }
     
     // ①サイドメニュー判定 ②アニメーションが終了したらsideMenuVCの親子関係を解除
-    private func hideSideMenu(animated: Bool) {
+    func hideSideMenu(animated: Bool) {
         if !isShowSidemenu {return}
         
         sideMenuVC.hideContentView(animated: animated, completion: { (_) in
