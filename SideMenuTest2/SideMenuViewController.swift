@@ -19,6 +19,9 @@ class SideMenuViewController: UIViewController {
     private var rootViewController: ViewController? {
         return self.parent as? ViewController
     }
+    // 弱参照delegate。処理を任せる相手。
+    weak var delegate: SidemenuViewControllerDelegate?
+    private var panGestureRecognizer: UIPanGestureRecognizer!
     
     // サイドメニューを閉じるボタン設置
     private var hideButton: UIButton {
@@ -116,6 +119,21 @@ class SideMenuViewController: UIViewController {
         viewVC.hideSideMenu(animated: true)
     }
     
+    // Panの処理
+    func startPanGestureRecognizing() {
+        // selfに処理を任せる。(ここではmainVCを取得している)
+        if let parentViewController = self.delegate?.parentViewControllerForSidemenuViewController(self) {
+            // SidemenuVCをpanするVCに指定
+            panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerHandled(panGestureRecognizer:)))
+            panGestureRecognizer.delegate = self
+            // mainVCに追加する
+            parentViewController.view.addGestureRecognizer(panGestureRecognizer)
+        }
+    }
+    
+    @objc private func panGestureRecognizerHandled(panGestureRecognizer: UIPanGestureRecognizer) {
+    }
+    
     
 
     /*
@@ -128,4 +146,13 @@ class SideMenuViewController: UIViewController {
     }
     */
 
+}
+
+// デリゲートメソッド。メソッドは定義するのみで実装はしない。classに準じている。
+protocol SidemenuViewControllerDelegate: class {
+    func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> UIViewController
+}
+
+extension SideMenuViewController: UIGestureRecognizerDelegate {
+    
 }

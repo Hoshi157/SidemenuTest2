@@ -74,3 +74,11 @@ class ViewController: UIViewController {
 
 }
 
+// delegateの実装。デフォルト実装にて処理を記載する。
+extension ViewController: SidemenuViewControllerDelegate {
+    // mainVCを返す
+    func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> UIViewController {
+        return self
+    }
+}
+
