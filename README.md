@@ -30,3 +30,8 @@ private var contentRatio: CGFloat {
 * contentView(ラッパークラスUIView)をsidemenuVCのwide0.8として表示させてcontentView.frame.origin.xにて左端の座標を設定しアニメーションしている。
 * contentRatioに0 or 1を入れることでアニメーションとなる
     
+## サイドメニューを閉じる処理(backViewをタップ、Sidemenuのボタンをタップ)
+* サイドメニューに閉じるボタンを設置した
+* mainVCのメソッド、インスタンスなどが必要なときはdelegateメソッドが非常に便利だった。
+             
+            
