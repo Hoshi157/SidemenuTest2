@@ -6,7 +6,7 @@
 * サイドメニューが表示されるときSidemenuVCをmainVCのchildVCに追加してviewのならびをmain→content(navigation)→sidemenuの順にする
 
 ## 動きのアニメーション
-~~~
+```
 private var contentRatio: CGFloat {
         get{
             // maxXはcontentViewの右端の座標を取得。
@@ -25,6 +25,6 @@ private var contentRatio: CGFloat {
             view.backgroundColor = UIColor(white: 0, alpha: 0.3 * ratio)
         }
     }
-    ~~~
+    ```
 * contentView(ラッパークラスUIView)をsidemenuVCのwide0.8として表示させてcontentView.frame.origin.xにて左端の座標を設定しアニメーションしている。
     
