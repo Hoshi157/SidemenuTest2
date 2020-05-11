@@ -25,6 +25,7 @@ private var contentRatio: CGFloat {
             view.backgroundColor = UIColor(white: 0, alpha: 0.3 * ratio)
         }
     }
-    ```
+    
+  ```
 * contentView(ラッパークラスUIView)をsidemenuVCのwide0.8として表示させてcontentView.frame.origin.xにて左端の座標を設定しアニメーションしている。
     
