@@ -31,6 +31,10 @@ class ViewController: UIViewController {
         // contentVCの設定(viewcontrollers[0]を追加しないとボタンが表示されず)
         contentViewController.viewControllers[0].view.backgroundColor = .blue
         contentViewController.viewControllers[0].navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(menuAction(_:)))
+        
+        // delegateしてpanする処理実行
+        sideMenuVC.delegate = self
+        sideMenuVC.startPanGestureRecognizing()
     }
     
     // ①サイドメニュー判定 ②サイドメニューをrootの子に追加 ③viewの重なりを設定
@@ -80,5 +84,18 @@ extension ViewController: SidemenuViewControllerDelegate {
     func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> UIViewController {
         return self
     }
+    func shouldPresentSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> Bool {
+        return true
+    }
+    func sidemenuViewControllerDidRequestShowing(_ sidemenuViewController: SideMenuViewController, contentAvailability: Bool, animeted: Bool) {
+        showSidemenu(contentAvailabilty: contentAvailability, animated: animeted)
+    }
+    func sidemenuViewControllerDidRequestHiding(_ sidemenuViewController: SideMenuViewController, animeted: Bool) {
+        hideSideMenu(animated: animeted)
+    }
+    func sidemenuViewcontroller(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath) {
+        hideSideMenu(animated: true)
+    }
+    
 }
 

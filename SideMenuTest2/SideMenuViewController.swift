@@ -22,6 +22,12 @@ class SideMenuViewController: UIViewController {
     // 弱参照delegate。処理を任せる相手。
     weak var delegate: SidemenuViewControllerDelegate?
     private var panGestureRecognizer: UIPanGestureRecognizer!
+    var isShow: Bool {
+        return parent != nil
+    }
+    private var beganState: Bool = false
+    private var beganLocation: CGPoint = .zero
+    private var screenEdgePanGestureRecognizer: UIScreenEdgePanGestureRecognizer!
     
     // サイドメニューを閉じるボタン設置
     private var hideButton: UIButton {
@@ -123,6 +129,8 @@ class SideMenuViewController: UIViewController {
     func startPanGestureRecognizing() {
         // selfに処理を任せる。(ここではmainVCを取得している)
         if let parentViewController = self.delegate?.parentViewControllerForSidemenuViewController(self) {
+            
+            
             // SidemenuVCをpanするVCに指定
             panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerHandled(panGestureRecognizer:)))
             panGestureRecognizer.delegate = self
@@ -131,7 +139,46 @@ class SideMenuViewController: UIViewController {
         }
     }
     
+    // panの処理部分
     @objc private func panGestureRecognizerHandled(panGestureRecognizer: UIPanGestureRecognizer) {
+        // サイドメニューを表示すべきか
+        guard  let shouldPresent = self.delegate?.shouldPresentSidemenuViewController(self), shouldPresent else {
+            return
+        }
+        // 既に表示されているとき右方向のpanは無視(translation.xが0以上というのはviewが表示されていると判断)
+        let translation = panGestureRecognizer.translation(in: view)
+        if translation.x > 0 && contentRatio == 1.0 {
+            return
+        }
+        
+        let location = panGestureRecognizer.location(in: view)
+        switch panGestureRecognizer.state {
+        case .began:
+            beganState = isShow
+            beganLocation = location
+            if translation.x >= 0 {
+                self.delegate?.sidemenuViewControllerDidRequestShowing(self, contentAvailability: false, animeted: false)
+            }
+        case .changed:
+            let distance = beganState ? beganLocation.x : location.x - beganLocation.x
+            if distance >= 0 {
+                let ratio = distance / (beganState ? beganLocation.x : (view.bounds.width - beganLocation.x))
+                let contentRatio = beganState ? 1 - ratio : ratio
+                self.contentRatio = contentRatio
+            }
+        case .ended, .cancelled, .failed:
+            if contentRatio >= 1.0, contentRatio <= 0 {
+                if location.x > beganLocation.x {
+                    showContentView(animated: true)
+                }else {
+                    self.delegate?.sidemenuViewControllerDidRequestHiding(self, animeted: true)
+                }
+            }
+            beganLocation = .zero
+            beganState = false
+        default: break
+        }
+        
     }
     
     
@@ -151,6 +198,10 @@ class SideMenuViewController: UIViewController {
 // デリゲートメソッド。メソッドは定義するのみで実装はしない。classに準じている。
 protocol SidemenuViewControllerDelegate: class {
     func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> UIViewController
+    func shouldPresentSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> Bool
+    func sidemenuViewControllerDidRequestShowing(_ sidemenuViewController: SideMenuViewController, contentAvailability: Bool, animeted: Bool)
+    func sidemenuViewControllerDidRequestHiding(_ sidemenuViewController: SideMenuViewController, animeted: Bool)
+    func sidemenuViewcontroller(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath)
 }
 
 extension SideMenuViewController: UIGestureRecognizerDelegate {
