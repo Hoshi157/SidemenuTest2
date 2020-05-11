@@ -26,5 +26,5 @@ private var contentRatio: CGFloat {
         }
     }
     ~~~
-    * contentView(ラッパークラスUIView)をsidemenuVCのwide0.8として表示させてcontentView.frame.origin.xにて左端の座標を設定しアニメーションしている。
+* contentView(ラッパークラスUIView)をsidemenuVCのwide0.8として表示させてcontentView.frame.origin.xにて左端の座標を設定しアニメーションしている。
     
