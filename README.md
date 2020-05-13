@@ -33,5 +33,13 @@ private var contentRatio: CGFloat {
 ## サイドメニューを閉じる処理(backViewをタップ、Sidemenuのボタンをタップ)
 * サイドメニューに閉じるボタンを設置した
 * mainVCのメソッド、インスタンスなどが必要なときはdelegateメソッドが非常に便利だった。
+* backViewの処理はsidemenuVCにUITapGestureRecognizerを追加して閉じる処理。
              
-            
+## Panの処理
+* sidemenuVCにUIPanGestureRecognizerを設定してmainVCにaddGestureRecognizerする。
+* メソッドはmainVC側で呼ぶ
+* panGestureRecognizer.stateのswicth文でアニメーションの処理部分を呼ぶ。
+
+## ScreenEdge(両端をドラッグと反応する処理)
+* sidemenuVCにUIScreenEdgePanGestureRecognizerを設定してmainVCにaddGestureRecognizerする
+             
