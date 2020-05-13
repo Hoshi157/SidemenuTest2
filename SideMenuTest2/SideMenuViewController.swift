@@ -125,7 +125,7 @@ class SideMenuViewController: UIViewController {
         }
     }
     
-    // Panの処理
+    // ①mainVCを取得、②mainVCにaddGestureRecognizer
     func startPanGestureRecognizing() {
         // selfに処理を任せる。(ここではmainVCを取得している)
         if let parentViewController = self.delegate?.parentViewControllerForSidemenuViewController(self) {
@@ -144,7 +144,7 @@ class SideMenuViewController: UIViewController {
         }
     }
     
-    // panの処理部分
+    // panの処理部分(アニメーション部分)
     @objc private func panGestureRecognizerHandled(panGestureRecognizer: UIPanGestureRecognizer) {
         // サイドメニューを表示すべきか(selfがSidemenuVCかどうか)
         guard  let shouldPresent = self.delegate?.shouldPresentSidemenuViewController(self), shouldPresent else {

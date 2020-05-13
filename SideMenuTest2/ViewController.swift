@@ -11,7 +11,7 @@ import UIKit
 class ViewController: UIViewController {
     
     private let sideMenuVC = SideMenuViewController()
-    // ストーリーボードにてnevigation実装するとタップが反応しない
+    // ストーリーボードにてnavigation実装するとタップが反応しない
     private let contentViewController = UINavigationController(rootViewController: UIViewController())
     // sideMenuVCがrootの親だったらtrue(すなわちサイドメニューが表示されている)
     private var isShowSidemenu: Bool {
@@ -32,7 +32,7 @@ class ViewController: UIViewController {
         contentViewController.viewControllers[0].view.backgroundColor = .blue
         contentViewController.viewControllers[0].navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(menuAction(_:)))
         
-        // delegateしてpanする処理実行
+        // delegateしてpanする処理実行(mainVCにaddGestureRecognizerしているため)
         sideMenuVC.delegate = self
         sideMenuVC.startPanGestureRecognizing()
     }
