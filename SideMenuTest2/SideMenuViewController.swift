@@ -116,7 +116,7 @@ class SideMenuViewController: UIViewController {
             self.view.removeFromSuperview()
         }
     }
-    
+    // バックビューをタップした時の処理
     @objc func backViewTapped(_ sender: UITapGestureRecognizer) {
         hideContentView(animated: true) { (_) in
             self.willMove(toParent: self)
@@ -130,18 +130,23 @@ class SideMenuViewController: UIViewController {
         // selfに処理を任せる。(ここではmainVCを取得している)
         if let parentViewController = self.delegate?.parentViewControllerForSidemenuViewController(self) {
             
-            
-            // SidemenuVCをpanするVCに指定
+            // SidemenuVCをpanするVCに指定(Tapは一度のみ, Panは繰り返し)
             panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerHandled(panGestureRecognizer:)))
             panGestureRecognizer.delegate = self
             // mainVCに追加する
             parentViewController.view.addGestureRecognizer(panGestureRecognizer)
+            
+            //　スクリーンの端をドラッグした時の認識
+            screenEdgePanGestureRecognizer = UIScreenEdgePanGestureRecognizer(target: self, action:#selector(panGestureRecognizerHandled(panGestureRecognizer:)))
+            screenEdgePanGestureRecognizer.edges = [.left]
+            screenEdgePanGestureRecognizer.delegate = self
+            parentViewController.view.addGestureRecognizer(screenEdgePanGestureRecognizer)
         }
     }
     
     // panの処理部分
     @objc private func panGestureRecognizerHandled(panGestureRecognizer: UIPanGestureRecognizer) {
-        // サイドメニューを表示すべきか
+        // サイドメニューを表示すべきか(selfがSidemenuVCかどうか)
         guard  let shouldPresent = self.delegate?.shouldPresentSidemenuViewController(self), shouldPresent else {
             return
         }
@@ -153,12 +158,17 @@ class SideMenuViewController: UIViewController {
         
         let location = panGestureRecognizer.location(in: view)
         switch panGestureRecognizer.state {
+            // 開始
         case .began:
+            // 親VCがある場合ture(表示、非表示を判定)
             beganState = isShow
             beganLocation = location
+            // viewが表示されている場合、
             if translation.x >= 0 {
+                // 何もしない
                 self.delegate?.sidemenuViewControllerDidRequestShowing(self, contentAvailability: false, animeted: false)
             }
+            // 動かしている最中(繰り返し)指に追随する処理
         case .changed:
             let distance = beganState ? beganLocation.x : location.x - beganLocation.x
             if distance >= 0 {
@@ -166,8 +176,10 @@ class SideMenuViewController: UIViewController {
                 let contentRatio = beganState ? 1 - ratio : ratio
                 self.contentRatio = contentRatio
             }
+            // 終了時(主に)最後までPanしなかったケースを想定する
         case .ended, .cancelled, .failed:
             if contentRatio >= 1.0, contentRatio <= 0 {
+                // 現在の座標と開始時の座標を比べて
                 if location.x > beganLocation.x {
                     showContentView(animated: true)
                 }else {

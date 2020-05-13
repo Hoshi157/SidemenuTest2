@@ -84,9 +84,11 @@ extension ViewController: SidemenuViewControllerDelegate {
     func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> UIViewController {
         return self
     }
+    // SidemunuVCか判定する
     func shouldPresentSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> Bool {
         return true
     }
+    
     func sidemenuViewControllerDidRequestShowing(_ sidemenuViewController: SideMenuViewController, contentAvailability: Bool, animeted: Bool) {
         showSidemenu(contentAvailabilty: contentAvailability, animated: animeted)
     }
